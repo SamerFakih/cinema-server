@@ -1,13 +1,9 @@
 <?php
 
 $host = 'localhost';
-$db_name = 'smartcinema';
+$db_name = 'cinemasmart_db';
 $user = 'root';
-$pass = 'admin';
+$pass = '';
 
-try {
-    $conn = new PDO("mysql:host=$host;dbname=$db_name", $user, $pass);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
-}
+
+$conn= new mysqli($host, $user, $pass, $db_name);
