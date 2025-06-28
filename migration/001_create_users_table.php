@@ -7,7 +7,7 @@ $query = "CREATE TABLE users (id INT AUTO_INCREMENT PRIMARY KEY,
                                 mobile INT NOT NULL UNIQUE,
                                 password VARCHAR(255) NOT NULL,
                                 dob DATE NOT NULL,
-                                government_id_image VARCHAR(255) NOT NULL,
+                                government_id_image LONGBOLB NOT NULL,
                                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)";
 
 $execute = $conn->prepare($query);
