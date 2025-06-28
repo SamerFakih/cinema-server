@@ -28,21 +28,47 @@ class User extends Model {
     }
 
     // Getters
-    public function getId(): int { return $this->id; }
-    public function getName(): string { return $this->name; }
-    public function getEmail(): string { return $this->email; }
-    public function getMobile(): string { return $this->mobile; }
-    public function getPassword(): string { return $this->password; }
-    public function getDob(): string { return $this->dob; }
-    public function getGovernmentId(): string { return $this->government_id; }
+    public function getId(): int {
+        return $this->id;
+    }
+    public function getName(): string {
+        return $this->name;
+    }
+    public function getEmail(): string {
+        return $this->email;
+    }
+    public function getMobile(): string {
+        return $this->mobile;
+    }
+    public function getPassword(): string {
+        return $this->password;
+    }
+    public function getDob(): string {
+        return $this->dob;
+    }
+    public function getGovernmentId(): string {
+        return base64_encode($this->government_id);
+    }
 
     // Setters
-    public function setName(string $name): string { return $this->name = $name; }
-    public function setEmail(string $email): string { return $this->email = $email; }
-    public function setMobile(string $mobile): string {return $this->mobile = $mobile; }
-    public function setPassword(string $password): string {return $this->password = $password; }
-    public function setDob(string $dob): void { $this->dob = $dob; }
-    public function setGovernmentId(string $government_id): string {return $this->government_id = $government_id; }
+    public function setName(string $name): string {
+        return $this->name = $name;
+    }
+    public function setEmail(string $email): string {
+        return $this->email = $email;
+    }
+    public function setMobile(string $mobile): string {
+        return $this->mobile = $mobile;
+    }
+    public function setPassword(string $password): string {
+        return $this->password = $password;
+    }
+    public function setDob(string $dob): void {
+        $this->dob = $dob;
+    }
+    public function setGovernmentId(string $government_id): string {
+        return $this->government_id = $government_id;
+    }
 
     public function toArray(): array {
         return [
