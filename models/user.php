@@ -1,7 +1,7 @@
 <?php
-require_once('../connection/connection.php');
 require_once('../models/model.php');
 
+Model::setConnection($conn);
 
 class User extends Model {
 
@@ -12,9 +12,10 @@ class User extends Model {
     private string $password;
     private string $dob;
     private string $government_id;
+    private int $admin;
 
     protected static string $table = 'users';
-    protected static array $fillable = ['name', 'email', 'mobile', 'password', 'dob', 'government_id_image'];
+    protected static array $fillable = ['name', 'email', 'mobile', 'password', 'dob', 'government_id_image','admin'];
 
 
     public function __construct(array $data) {
@@ -25,6 +26,7 @@ class User extends Model {
         $this->password = $data["password"];
         $this->dob = $data['dob'];
         $this->government_id = $data["government_id_image"];
+        $this ->admin = $data["admin"] ?? 0;
     }
 
     // Getters
@@ -50,6 +52,10 @@ class User extends Model {
         return base64_encode($this->government_id);
     }
 
+    public function getAdmin():int {
+        return $this->admin;
+    }
+
     // Setters
     public function setName(string $name): string {
         return $this->name = $name;
@@ -69,6 +75,9 @@ class User extends Model {
     public function setGovernmentId(string $government_id): string {
         return $this->government_id = $government_id;
     }
+    public function setAdmin(int $admin) : int {
+        return $this->admin = $admin;
+    }
 
     public function toArray(): array {
         return [
@@ -78,7 +87,8 @@ class User extends Model {
             'mobile' => $this->getMobile(),
             'password' => $this->getPassword(),
             'dob' => $this->getDob(),
-            'government_id_image' => $this->getGovernmentId()
+            'government_id_image' => $this->getGovernmentId(),
+            'admin' => $this->getAdmin()
         ];
     }
 }
