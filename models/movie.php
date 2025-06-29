@@ -2,19 +2,18 @@
 require_once('../connection/connection.php');
 require_once('../models/model.php');
 
-Model::setConnection($conn);
 
-class movie extends Model {
+class Movie extends Model {
 
     private int $id;
     private string $title;
     private string $description;
     private string $release_date;
     private int $duration;
-    private string $rating;
+    private int $rating;
     private string $image;
     private string $url;
-    private string $auditorium_id;
+    private int $auditorium_id;
 
     protected static string $table = 'movies';
     protected static array $fillable= ['title', 'description', 'release_date', 'duration', 'rating', 'image', 'url', 'auditorium_id'];
@@ -27,20 +26,21 @@ class movie extends Model {
         $this->duration = $data['duration'];
         $this->rating = $data['rating'];
         $this->image = $data['image'];
-        $this->url = $data['auditorium_id'];
+        $this->url = $data['url'];
+        $this->auditorium_id = $data['auditorium_id'];
     }
 
     //GETTERS
     public function getId(): int {
         return $this->id;
     }
-    public function getTitle(): int {
+    public function getTitle(): string {
         return $this->title;
     }
-    public function getDescription(): int {
+    public function getDescription(): string {
         return $this->description;
     }
-    public function getRelease_date(): int {
+    public function getRelease_date(): string {
         return $this->release_date;
     }
     public function getDuration(): int {
@@ -49,10 +49,10 @@ class movie extends Model {
     public function getRating(): int {
         return $this->rating;
     }
-    public function getImage(): int {
-        return $this->image;
+    public function getImage(): string {
+        return base64_encode($this->image);
     }
-    public function getUrl(): int {
+    public function getUrl(): string {
         return $this->url;
     }
     public function getAuditorium_id(): int {
@@ -69,13 +69,13 @@ class movie extends Model {
     public function setDescription(string $description): string {
         return $this->description = $description;
     }
-    public function setRelease_date(string $release_date): string {
-        return $this->release_date = $release_date;
+    public function setRelease_date(string $release_date): void {
+        $this->release_date = $release_date;
     }
-    public function setDuration(string $duration): string {
+    public function setDuration(int $duration): int {
         return $this->duration = $duration;
     }
-    public function setRating(string $rating): string {
+    public function setRating(int $rating): int {
         return $this->rating = $rating;
     }
     public function setImage(string $image): string {
@@ -84,7 +84,7 @@ class movie extends Model {
     public function setUrl(string $url): string {
         return $this->url = $url;
     }
-    public function setAuditorium_id(string $auditorium_id): string {
+    public function setAuditorium_id(int $auditorium_id): int {
         return $this->auditorium_id = $auditorium_id;
     }
     
