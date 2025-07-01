@@ -4,7 +4,6 @@ header("Access-Control-Allow-Origin:*");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 
-// Handle preflight request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
@@ -15,33 +14,37 @@ require_once('../models/user.php');
 
 Model::setConnection($conn);
 
-// Detect if it's JSON
 $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
-
-
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && str_starts_with($contentType, 'multipart/form-data')) {
     if (
         isset($_POST['name'], $_POST['email'], $_POST['mobile'], $_POST['password'], $_POST['dob']) &&
         isset($_FILES['government_id_image'])
     ) {
-        $target_dir = "uploads/";
-        $uniq_name = uniqid()."_".basename($_FILES["government_id_image"]["name"]);
-        $uploadOk = 1;
-        $imageFileType =strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-        
-        //check file size
-        if($_FILES["government_id_image"]["name"]>500000){
-        echo "Sorry, your file is too large";
-            $uploadOk = 0;
+        $target_dir = "../uploads/";
+        $uniq_name = uniqid() . "_" . basename($_FILES["government_id_image"]["name"]);
+        $target_file = $target_dir . $uniq_name;
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+        // Validate image file size
+        if ($_FILES["government_id_image"]["size"] > 500000) {
+            echo json_encode(['status' => 'error', 'message' => 'File too large']);
+            exit;
         }
-        //allow certain file format
-        if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-        && $imageFileType != "gif" ) {
-            echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-            $uploadOk = 0;
+
+        // Validate file format
+        if (!in_array($imageFileType, ['jpg', 'jpeg', 'png', 'gif'])) {
+            echo json_encode(['status' => 'error', 'message' => 'Only JPG, JPEG, PNG & GIF files allowed']);
+            exit;
         }
-        $imageUrl ="http://localhost/Cinema_server/uploads/".$uniq_name;
+
+        if (!move_uploaded_file($_FILES["government_id_image"]["tmp_name"], $target_file)) {
+            echo json_encode(['status' => 'error', 'message' => 'Failed to move uploaded file']);
+            exit;
+        }
+
+        $imageUrl = "http://localhost/Cinema_server/uploads/" . $uniq_name;
+
         $userData = [
             'name' => $_POST['name'],
             'email' => $_POST['email'],
@@ -52,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && str_starts_with($contentType, 'mult
         ];
 
         if (User::create($userData)) {
-            echo json_encode(['status' => 'success', 'message' => 'User created successfully']);
+            echo json_encode(['status' => 'success', 'message' => 'User created successfully', 'image_url' => $imageUrl]);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Failed to create user']);
         }
@@ -62,5 +65,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && str_starts_with($contentType, 'mult
     exit;
 }
 
-// Default fallback
 echo json_encode(['status' => 'error', 'message' => 'Invalid request — no action matched']);
