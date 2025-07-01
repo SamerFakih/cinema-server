@@ -25,13 +25,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && str_starts_with($contentType, 'mult
         isset($_POST['name'], $_POST['email'], $_POST['mobile'], $_POST['password'], $_POST['dob']) &&
         isset($_FILES['government_id_image'])
     ) {
+        $target_dir = "uploads/";
+        $uniq_name = uniqid()."_".basename($_FILES["government_id_image"]["name"]);
+        $uploadOk = 1;
+        $imageFileType =strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+        
+        //check file size
+        if($_FILES["government_id_image"]["name"]>500000){
+        echo "Sorry, your file is too large";
+            $uploadOk = 0;
+        }
+        //allow certain file format
+        if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+        && $imageFileType != "gif" ) {
+            echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+            $uploadOk = 0;
+        }
+        $imageUrl ="http://localhost/Cinema_server/uploads/".$uniq_name;
         $userData = [
             'name' => $_POST['name'],
             'email' => $_POST['email'],
             'mobile' => $_POST['mobile'],
             'password' => password_hash($_POST['password'], PASSWORD_BCRYPT),
             'dob' => $_POST['dob'],
-            'government_id_image' => file_get_contents($_FILES['government_id_image']['tmp_name']),
+            'government_id_image' => $imageUrl,
         ];
 
         if (User::create($userData)) {
