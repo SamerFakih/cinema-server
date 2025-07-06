@@ -1,6 +1,5 @@
 <?php
-require_once('../connection/connection.php');
-require_once('../models/model.php');
+require_once(__DIR__.'/../models/model.php');
 
 
 class Movie extends Model {
